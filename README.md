@@ -1,69 +1,73 @@
 # DarkmodeWindow
 
-macOS-App für Teams-/Meet-/Zoom-Meetings, in denen jemand eine helle Präsentation
-(weiße PowerPoint-Folien, helle Apps) teilt. Ein Fenster legt sich über den geteilten
-Bereich und zeigt ihn **dunkel** an – als intelligenter Dark Mode statt simpler
-Farbumkehr. Gedacht für Menschen, denen helle Bildschirme Augenschmerzen bereiten.
+**English** | [Deutsch](README.de.md)
 
-## Was die App macht
+A macOS app for Teams, Meet and Zoom meetings where someone shares a bright presentation
+(white PowerPoint slides, light-themed apps). A window sits on top of the shared area and
+shows it **dark** – as a smart dark mode rather than a simple color inversion. Made for
+people for whom bright screens cause eye strain or pain.
 
-- **Smart Dark:** Weißer Hintergrund wird dunkelgrau (#161616), schwarze Schrift hellgrau
-  (#DEDEDE). Farben behalten ihren Farbton (Rot bleibt rot, Blau bleibt blau).
-- **Dunkle Bereiche beibehalten:** Dunkle Oberflächen (Meet-/Teams-UI, Videokacheln, Fotos)
-  werden nicht umgekehrt; Schrift bleibt scharf.
-- **Abdunkeln:** Alternative ohne Umwandlung, nur Helligkeit reduzieren.
-- **Automatisch auf hellen Bereich ausrichten:** Sucht alle 2 Sekunden die größte helle Fläche
-  (z. B. die geteilte Präsentation) und legt das Fenster passgenau darüber.
-- **An Meeting-Fenster andocken:** Fenster folgt einem Teams-/Meet-/Zoom-Fenster.
-- Klicks in den Innenbereich gehen an das Meeting-Fenster darunter; verschoben wird über
-  Titelleiste und Rahmen.
+## Features
 
-## Bedienung
+- **Smart Dark:** white backgrounds become dark gray (#161616), black text becomes light gray
+  (#DEDEDE). Colors keep their hue (red stays red, blue stays blue).
+- **Keep Dark Areas:** dark surfaces (Meet/Teams UI, video tiles, photos) are not inverted;
+  text stays crisp.
+- **Dim:** alternative without conversion that only reduces brightness.
+- **Snap to Bright Area Automatically:** every 2 seconds, finds the largest bright area
+  (e.g. the shared presentation) and places the window exactly over it.
+- **Attach to Meeting Window:** the window follows a Teams/Meet/Zoom window.
+- Clicks inside the window go through to the meeting window underneath; move it via the
+  title bar and frame.
 
-| Aktion | Wo |
+The user interface is bilingual: German on German-language systems, English everywhere else.
+
+## Usage
+
+| Action | Where |
 | --- | --- |
-| Fenster ein-/ausblenden | ⌃⌥⌘D, Dock-Symbol, Mond-Menü |
-| Auto-Position an/aus | ⌃⌥⌘A, App-Menü „Fenster“, Mond-Menü |
-| Modus, Helligkeit, Andocken | Mond-Symbol in der Menüleiste |
-| Beenden | ⌘Q (nach Klick auf Rahmen/Titelleiste), Rechtsklick aufs Dock-Symbol |
+| Show/hide window | ⌃⌥⌘D, Dock icon, moon menu |
+| Auto snap on/off | ⌃⌥⌘A, app menu “Window”, moon menu |
+| Mode, brightness, attach | moon icon in the menu bar |
+| Quit | ⌘Q (after clicking the frame/title bar), right-click the Dock icon |
 
-## Voraussetzungen
+## Requirements
 
-- macOS 15 oder neuer
-- Xcode Command Line Tools (`xcode-select --install`); ein volles Xcode ist nicht nötig
-- Berechtigung **Bildschirmaufnahme** (Systemeinstellungen › Datenschutz & Sicherheit)
+- macOS 15 or later
+- Xcode Command Line Tools (`xcode-select --install`); full Xcode is not required
+- **Screen Recording** permission (System Settings › Privacy & Security)
 
-## Bauen und starten
+## Build and run
 
 ```bash
 ./scripts/build-app.sh
 open ~/Applications/DarkmodeWindow.app
 ```
 
-Das Skript baut mit dem Swift Package Manager, legt das App-Bundle unter
-`~/Applications/DarkmodeWindow.app` an und signiert es ad hoc. Zwischendateien liegen in
+The script builds with Swift Package Manager, creates the app bundle at
+`~/Applications/DarkmodeWindow.app` and signs it ad hoc. Intermediate files go to
 `~/Library/Caches/DarkmodeWindow-build`.
 
-**Hinweis zur Berechtigung:** Wegen der Ad-hoc-Signatur sieht macOS jede neu gebaute Version
-als neue App. Nach einem Neubau in den Systemeinstellungen den Eintrag DarkmodeWindow mit
-**–** entfernen, App neu starten und die Berechtigung erneut erteilen. Mit einem festen
-Signier-Zertifikat entfällt das: `SIGN_ID="Name des Zertifikats" ./scripts/build-app.sh`.
+**About the permission:** because of the ad-hoc signature, macOS treats every rebuilt version
+as a new app. After a rebuild, remove DarkmodeWindow from the list in System Settings with
+**–**, restart the app and grant the permission again. A fixed signing certificate avoids this:
+`SIGN_ID="Certificate name" ./scripts/build-app.sh`.
 
-## Filter testen
+## Testing the filter
 
 ```bash
-./scripts/shader-preview.sh [screenshot.png] [ausgabe.png] [scale]
+./scripts/shader-preview.sh [screenshot.png] [output.png] [scale]
 ```
 
-Rendert ein Bild (z. B. Screenshot einer Folie) durch den Filter: oben Original, unten Ergebnis.
-Ohne Eingabe wird eine Testfolie erzeugt.
+Renders an image (e.g. a screenshot of a slide) through the filter: original on top, result
+below. Without input, a test slide is generated.
 
-## Technik
+## How it works
 
-ScreenCaptureKit nimmt den Bereich unter dem Fenster auf (eigene App ausgeschlossen), ein
-Metal-Shader wandelt ihn im OKLab-Farbraum um. Details, Entscheidungen und bekannte
-Kompromisse stehen in [CLAUDE.md](CLAUDE.md).
+ScreenCaptureKit captures the area beneath the window (excluding the app itself), and a Metal
+shader converts it in the OKLab color space. Details, design decisions and known trade-offs are
+in [CLAUDE.md](CLAUDE.md).
 
-## Lizenz
+## License
 
-MIT – siehe [LICENSE](LICENSE). © 2026 Fey IT GmbH
+MIT – see [LICENSE](LICENSE). © 2026 Fey IT GmbH

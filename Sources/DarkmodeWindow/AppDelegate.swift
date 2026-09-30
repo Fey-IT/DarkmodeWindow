@@ -44,15 +44,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
 
         let appItem = NSMenuItem()
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "DarkmodeWindow ausblenden", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: L10n.t("DarkmodeWindow ausblenden", "Hide DarkmodeWindow"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "DarkmodeWindow beenden", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: L10n.t("DarkmodeWindow beenden", "Quit DarkmodeWindow"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appItem.submenu = appMenu
         main.addItem(appItem)
 
         let windowItem = NSMenuItem()
-        let windowMenu = NSMenu(title: "Fenster")
-        let toggle = item("Fenster ein-/ausblenden", #selector(toggleWindow), key: "d")
+        let windowMenu = NSMenu(title: L10n.t("Fenster", "Window"))
+        let toggle = item(L10n.t("Fenster ein-/ausblenden", "Show/Hide Window"), #selector(toggleWindow), key: "d")
         toggle.keyEquivalentModifierMask = [.control, .option, .command]
         windowMenu.addItem(toggle)
         windowMenu.addItem(.separator())
@@ -68,7 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
 
-        let toggle = item(overlay.isShown ? "Fenster ausblenden" : "Fenster anzeigen", #selector(toggleWindow))
+        let toggle = item(overlay.isShown ? L10n.t("Fenster ausblenden", "Hide Window") : L10n.t("Fenster anzeigen", "Show Window"), #selector(toggleWindow))
         toggle.keyEquivalent = "d"
         toggle.keyEquivalentModifierMask = [.control, .option, .command]
         menu.addItem(toggle)
@@ -77,12 +77,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
         let smart = item("Smart Dark", #selector(selectSmartDark))
         smart.state = settings.mode == .smartDark ? .on : .off
         menu.addItem(smart)
-        let dim = item("Abdunkeln", #selector(selectDim))
+        let dim = item(L10n.t("Abdunkeln", "Dim"), #selector(selectDim))
         dim.state = settings.mode == .dim ? .on : .off
         menu.addItem(dim)
-        let adaptive = item("Dunkle Bereiche beibehalten", #selector(toggleAdaptive))
+        let adaptive = item(L10n.t("Dunkle Bereiche beibehalten", "Keep Dark Areas"), #selector(toggleAdaptive))
         adaptive.state = settings.adaptive ? .on : .off
-        adaptive.toolTip = "Nur helle Flächen werden umgewandelt – dunkle Oberflächen, Videos und dunkle Bilder bleiben unverändert."
+        adaptive.toolTip = L10n.t("Nur helle Flächen werden umgewandelt – dunkle Oberflächen, Videos und dunkle Bilder bleiben unverändert.",
+                                  "Only light areas are converted – dark UI, videos and dark images stay as they are.")
         menu.addItem(adaptive)
         menu.addItem(sliderItem())
         menu.addItem(.separator())
@@ -92,18 +93,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
         menu.addItem(.separator())
 
         if !CGPreflightScreenCaptureAccess() || overlay.captureFailed {
-            menu.addItem(item("⚠︎ Bildschirmaufnahme erlauben …", #selector(openPrivacySettings)))
-            menu.addItem(item("App neu starten", #selector(relaunch)))
+            menu.addItem(item(L10n.t("⚠︎ Bildschirmaufnahme erlauben …", "⚠︎ Allow Screen Recording …"), #selector(openPrivacySettings)))
+            menu.addItem(item(L10n.t("App neu starten", "Restart App"), #selector(relaunch)))
             menu.addItem(.separator())
         }
-        menu.addItem(item("Beenden", #selector(quit), key: "q"))
+        menu.addItem(item(L10n.t("Beenden", "Quit"), #selector(quit), key: "q"))
     }
 
     private func autoPositionItem() -> NSMenuItem {
-        let auto = item("Automatisch auf hellen Bereich ausrichten", #selector(toggleAutoPosition), key: "a")
+        let auto = item(L10n.t("Automatisch auf hellen Bereich ausrichten", "Snap to Bright Area Automatically"), #selector(toggleAutoPosition), key: "a")
         auto.keyEquivalentModifierMask = [.control, .option, .command]
         auto.state = overlay?.autoPositionEnabled == true ? .on : .off
-        auto.toolTip = "Sucht alle 2 Sekunden die größte helle Fläche (z. B. geteilte Präsentation) und legt das Fenster darüber."
+        auto.toolTip = L10n.t("Sucht alle 2 Sekunden die größte helle Fläche (z. B. geteilte Präsentation) und legt das Fenster darüber.",
+                              "Every 2 seconds, finds the largest bright area (e.g. a shared presentation) and places the window over it.")
         return auto
     }
 
@@ -123,7 +125,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
 
     private func sliderItem() -> NSMenuItem {
         let view = NSView(frame: NSRect(x: 0, y: 0, width: 240, height: 44))
-        let label = NSTextField(labelWithString: "Helligkeit")
+        let label = NSTextField(labelWithString: L10n.t("Helligkeit", "Brightness"))
         label.font = .menuFont(ofSize: 0)
         label.textColor = .secondaryLabelColor
         label.frame = NSRect(x: 20, y: 24, width: 200, height: 16)
@@ -139,17 +141,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
     }
 
     private func dockMenuItem() -> NSMenuItem {
-        let parent = NSMenuItem(title: "An Meeting-Fenster andocken", action: nil, keyEquivalent: "")
+        let parent = NSMenuItem(title: L10n.t("An Meeting-Fenster andocken", "Attach to Meeting Window"), action: nil, keyEquivalent: "")
         let sub = NSMenu()
         if let docked = overlay.dockedWindow {
-            parent.title = "Angedockt: \(docked.owner)"
-            sub.addItem(item("Andocken lösen", #selector(undock)))
+            parent.title = L10n.t("Angedockt: ", "Attached: ") + docked.owner
+            sub.addItem(item(L10n.t("Andocken lösen", "Detach"), #selector(undock)))
             sub.addItem(.separator())
         }
         let all = WindowDocking.allWindows()
         let meetings = WindowDocking.meetingWindows(in: all)
         if meetings.isEmpty {
-            let none = NSMenuItem(title: "Kein Teams-/Meet-/Zoom-Fenster gefunden", action: nil, keyEquivalent: "")
+            let none = NSMenuItem(title: L10n.t("Kein Teams-/Meet-/Zoom-Fenster gefunden", "No Teams/Meet/Zoom window found"), action: nil, keyEquivalent: "")
             none.isEnabled = false
             sub.addItem(none)
         }
@@ -158,7 +160,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenu
         let others = all.filter { w in !meetings.contains { $0.id == w.id } }
         if !others.isEmpty {
             sub.addItem(.separator())
-            let otherItem = NSMenuItem(title: "Andere Fenster", action: nil, keyEquivalent: "")
+            let otherItem = NSMenuItem(title: L10n.t("Andere Fenster", "Other Windows"), action: nil, keyEquivalent: "")
             let otherMenu = NSMenu()
             for w in others { otherMenu.addItem(dockItem(for: w)) }
             otherItem.submenu = otherMenu

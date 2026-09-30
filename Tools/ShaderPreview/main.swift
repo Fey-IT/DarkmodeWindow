@@ -21,10 +21,10 @@ func text(_ s: String, _ x: CGFloat, _ y: CGFloat, _ size: CGFloat, _ c: NSColor
     ctx.textPosition = CGPoint(x: x, y: y); CTLineDraw(line, ctx)
 }
 text("Teams Chat", 20, 640, 16, .white, bold: true)
-text("Hallo zusammen", 20, 600, 13, NSColor(white: 0.85, alpha: 1))
-text("Quartalszahlen 2026", 260, 610, 44, .black, bold: true)
-text("Umsatz steigt um 12 % – Kosten stabil", 260, 550, 24, NSColor(white: 0.25, alpha: 1))
-text("Wichtig: Frist 30.09.", 260, 500, 24, NSColor(srgbRed: 0.8, green: 0.1, blue: 0.1, alpha: 1), bold: true)
+text("Hi everyone", 20, 600, 13, NSColor(white: 0.85, alpha: 1))
+text("Quarterly Results 2026", 260, 610, 44, .black, bold: true)
+text("Revenue up 12 % – costs stable", 260, 550, 24, NSColor(white: 0.25, alpha: 1))
+text("Important: deadline 30 Sep", 260, 500, 24, NSColor(srgbRed: 0.8, green: 0.1, blue: 0.1, alpha: 1), bold: true)
 text("Link: intranet.example.com", 260, 460, 22, NSColor(srgbRed: 0.1, green: 0.3, blue: 0.85, alpha: 1))
 let bars: [(CGFloat, NSColor)] = [(180, .systemBlue), (240, .systemOrange), (120, .systemGreen), (300, NSColor(srgbRed: 0.5, green: 0.2, blue: 0.7, alpha: 1))]
 for (i, b) in bars.enumerated() { ctx.setFillColor(b.1.cgColor); ctx.fill(CGRect(x: 280 + CGFloat(i)*90, y: 80, width: 60, height: b.0)) }
@@ -33,15 +33,15 @@ let grad = CGGradient(colorsSpace: cs, colors: [NSColor(srgbRed: 0.9, green: 0.7
 ctx.saveGState(); ctx.clip(to: CGRect(x: 780, y: 80, width: 340, height: 300))
 ctx.drawLinearGradient(grad, start: CGPoint(x: 780, y: 380), end: CGPoint(x: 1120, y: 80), options: []); ctx.restoreGState()
 ctx.setFillColor(NSColor(srgbRed: 0.93, green: 0.95, blue: 1.0, alpha: 1).cgColor); ctx.fill(CGRect(x: 780, y: 420, width: 340, height: 60))
-text("Hellblaue Info-Box", 800, 440, 20, NSColor(srgbRed: 0.1, green: 0.2, blue: 0.5, alpha: 1))
+text("Light blue info box", 800, 440, 20, NSColor(srgbRed: 0.1, green: 0.2, blue: 0.5, alpha: 1))
 if let inputImage { ctx.draw(inputImage, in: CGRect(x: 0, y: 0, width: W, height: H)) }
 if inputImage == nil {
     ctx.setFillColor(NSColor(srgbRed: 0.93, green: 0.55, blue: 0.2, alpha: 1).cgColor)
     let button = CGPath(roundedRect: CGRect(x: 780, y: 520, width: 340, height: 44), cornerWidth: 8, cornerHeight: 8, transform: nil)
     ctx.addPath(button); ctx.fillPath()
-    text("Anmelden", 800, 534, 18, .white, bold: true)
+    text("Sign in", 800, 534, 18, .white, bold: true)
     ctx.setFillColor(NSColor(srgbRed: 0.2, green: 0.45, blue: 0.85, alpha: 1).cgColor); ctx.fill(CGRect(x: 780, y: 590, width: 340, height: 40))
-    text("Kopfzeile", 800, 602, 16, .white)
+    text("Header", 800, 602, 16, .white)
 }
 let input = ctx.makeImage()!
 
@@ -69,4 +69,4 @@ let combo = CGContext(data: nil, width: W, height: H*2, bitsPerComponent: 8, byt
 combo.draw(input, in: CGRect(x: 0, y: H, width: W, height: H)); combo.draw(octx.makeImage()!, in: CGRect(x: 0, y: 0, width: W, height: H))
 let rep = NSBitmapImageRep(cgImage: combo.makeImage()!)
 try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: outputPath))
-print("Vorschau: \(outputPath)")
+print("Preview: \(outputPath)")

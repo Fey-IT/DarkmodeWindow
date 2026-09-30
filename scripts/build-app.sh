@@ -18,4 +18,4 @@ cp "$BIN" "$APP/Contents/MacOS/DarkmodeWindow"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 codesign --force --sign "$SIGN_ID" --identifier de.fey-it.DarkmodeWindow "$APP"
 
-echo "Installiert: $APP"
+echo "Installed: $APP"

@@ -148,11 +148,11 @@ final class OverlayController: NSObject, NSWindowDelegate {
     private func updateTitle() {
         var parts = ["DarkmodeWindow"]
         if captureFailed {
-            parts.append("Abdunkeln (keine Aufnahme-Berechtigung)")
+            parts.append(L10n.t("Abdunkeln (keine Aufnahme-Berechtigung)", "Dim (no screen recording permission)"))
         } else {
-            parts.append(settings.mode == .smartDark ? "Smart Dark" : "Abdunkeln")
+            parts.append(settings.mode == .smartDark ? "Smart Dark" : L10n.t("Abdunkeln", "Dim"))
         }
-        if let dockedWindow { parts.append("angedockt: \(dockedWindow.owner)") }
+        if let dockedWindow { parts.append(L10n.t("angedockt: ", "attached: ") + dockedWindow.owner) }
         if settings.autoPosition { parts.append("Auto-Position") }
         frameView.title = parts.joined(separator: " · ")
     }

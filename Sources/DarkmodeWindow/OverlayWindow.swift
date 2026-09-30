@@ -58,12 +58,12 @@ final class FrameView: NSView {
         titleLabel.lineBreakMode = .byTruncatingTail
         addSubview(titleLabel)
 
-        closeButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Ausblenden")
+        closeButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: L10n.t("Ausblenden", "Hide"))
         closeButton.isBordered = false
         closeButton.contentTintColor = NSColor(white: 0.6, alpha: 1)
         closeButton.target = self
         closeButton.action = #selector(closeClicked)
-        closeButton.toolTip = "Ausblenden (⌃⌥⌘D)"
+        closeButton.toolTip = L10n.t("Ausblenden (⌃⌥⌘D)", "Hide (⌃⌥⌘D)")
         addSubview(closeButton)
 
         addTrackingArea(NSTrackingArea(rect: .zero,
