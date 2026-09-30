@@ -2,8 +2,10 @@
 
 ## Purpose
 macOS app with a movable, resizable window that shows the screen content **behind** it –
-dimmed or converted into a smart dark mode. Main use case: screen sharing in Teams / Google Meet /
-Zoom with white PowerPoint slides. Target audience: people who depend on dark displays (e.g. light
+dimmed or converted into a smart dark mode. Works with **any app** (documents, web pages, PDFs,
+light-themed programs), since it converts whatever is visible rather than relying on the app's own
+dark mode; screen sharing in Teams / Meet / Zoom with white slides is one typical use case.
+Target audience: people who depend on dark displays (e.g. light
 sensitivity) – **avoiding brightness spikes has top priority** (no white flash on start, on slide
 changes or on errors).
 

@@ -2,23 +2,32 @@
 
 [English](README.md) | **Deutsch**
 
-macOS-App für Teams-/Meet-/Zoom-Meetings, in denen jemand eine helle Präsentation
-(weiße PowerPoint-Folien, helle Apps) teilt. Ein Fenster legt sich über den geteilten
-Bereich und zeigt ihn **dunkel** an – als intelligenter Dark Mode statt simpler
-Farbumkehr. Gedacht für Menschen, denen helle Bildschirme Augenschmerzen bereiten.
+macOS-App, die **alles Helle auf dem Bildschirm dunkel macht** – in jedem Programm. Das Fenster
+über ein weißes Dokument, eine Webseite ohne Dark Mode, ein helles Programm, ein PDF oder einen
+geteilten Bildschirm in einer Videokonferenz legen, und der Bereich erscheint **dunkel** – als
+intelligenter Dark Mode statt simpler Farbumkehr. Gedacht für Menschen, denen helle Bildschirme
+Augenschmerzen bereiten.
+
+Die App funktioniert mit allen Programmen auf dem Mac, weil sie nicht darauf angewiesen ist, dass
+ein Programm selbst einen Dark Mode hat: Sie wandelt einfach um, was unter dem Fenster zu sehen
+ist. Videokonferenzen (Teams, Meet, Zoom), in denen jemand weiße PowerPoint-Folien teilt, sind nur
+ein typischer Anwendungsfall.
 
 ## Was die App macht
 
 - **Smart Dark:** Weißer Hintergrund wird dunkelgrau (#161616), schwarze Schrift hellgrau
   (#DEDEDE). Farben behalten ihren Farbton (Rot bleibt rot, Blau bleibt blau).
-- **Dunkle Bereiche beibehalten:** Dunkle Oberflächen (Meet-/Teams-UI, Videokacheln, Fotos)
-  werden nicht umgekehrt; Schrift bleibt scharf.
+- **Dunkle Bereiche beibehalten:** Was schon dunkel ist (dunkle Programmoberflächen, Videos,
+  Fotos), wird nicht umgekehrt; Schrift bleibt scharf.
 - **Abdunkeln:** Alternative ohne Umwandlung, nur Helligkeit reduzieren.
 - **Automatisch auf hellen Bereich ausrichten:** Sucht alle 2 Sekunden die größte helle Fläche
-  (z. B. die geteilte Präsentation) und legt das Fenster passgenau darüber.
-- **An Meeting-Fenster andocken:** Fenster folgt einem Teams-/Meet-/Zoom-Fenster.
-- Klicks in den Innenbereich gehen an das Meeting-Fenster darunter; verschoben wird über
-  Titelleiste und Rahmen.
+  auf dem Bildschirm (z. B. ein weißes Dokument oder eine geteilte Präsentation) und legt das
+  Fenster passgenau darüber.
+- **An ein Fenster andocken:** Das Overlay folgt dem Fenster eines anderen Programms, wenn es
+  verschoben oder vergrößert wird – Meeting-Apps werden zuerst vorgeschlagen, jedes andere
+  Fenster ist unter „Andere Fenster“ wählbar.
+- Klicks in den Innenbereich gehen an das Programm darunter, man arbeitet also normal weiter;
+  verschoben wird über Titelleiste und Rahmen.
 
 Die Oberfläche ist zweisprachig: Deutsch auf deutschsprachigen Systemen, sonst Englisch.
 
