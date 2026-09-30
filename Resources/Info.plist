@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key><string>DarkmodeWindow</string>
+    <key>CFBundleDisplayName</key><string>DarkmodeWindow</string>
+    <key>CFBundleIdentifier</key><string>de.fey-it.DarkmodeWindow</string>
+    <key>CFBundleExecutable</key><string>DarkmodeWindow</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.1</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>15.0</string>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSScreenCaptureUsageDescription</key><string>DarkmodeWindow nimmt den Bereich unter seinem Fenster auf, um ihn dunkel darzustellen.</string>
+</dict>
+</plist>
