@@ -34,6 +34,7 @@ final class OverlayController: NSObject, NSWindowDelegate {
         frameView.contentContainer.addSubview(metalView)
         frameView.onUserInteraction = { [weak self] in self?.userDidManipulate() }
         frameView.onClose = { [weak self] in self?.hide() }
+        frameView.onSensitivityStep = { [weak self] step in self?.changeSensitivity(by: step) }
 
         capture.onFrame = { [weak self] buffer, covered in
             guard let self else { return }
@@ -117,7 +118,10 @@ final class OverlayController: NSObject, NSWindowDelegate {
         params.lodErode = log2(2 * scale)
         params.lodColor = log2(8 * scale)
         params.inkOffset = 5 * scale
+        params.brightThreshold = settings.brightThreshold
         renderer?.params = params
+        frameView.sensitivity = settings.sensitivity
+        frameView.showsSensitivity = smart && settings.adaptive
 
         if smart && window.isVisible {
             updateCaptureRegion()
@@ -126,6 +130,12 @@ final class OverlayController: NSObject, NSWindowDelegate {
             stopCapture()
         }
         updateTitle()
+    }
+
+    /// Called by the − / + buttons in the title bar.
+    private func changeSensitivity(by step: Int) {
+        settings.sensitivity += step
+        applyMode()
     }
 
     /// Clears a previous capture failure and tries again (e.g. after granting permission).

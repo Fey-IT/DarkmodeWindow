@@ -17,6 +17,9 @@ someone shares white PowerPoint slides are just one typical use case.
   (#DEDEDE). Colors keep their hue (red stays red, blue stays blue).
 - **Keep Dark Areas:** content that is already dark (dark app UI, videos, photos) is not
   inverted; text stays crisp.
+- **Sensitivity (− ◐ +):** buttons in the title bar set from which brightness on an area is
+  turned dark. **+** also darkens light gray, beige or tinted backgrounds, **−** only near-white
+  ones (8 levels, default 4).
 - **Dim:** alternative without conversion that only reduces brightness.
 - **Snap to Bright Area Automatically:** every 2 seconds, finds the largest bright area
   on screen (e.g. a white document or a shared presentation) and places the window exactly
@@ -35,6 +38,7 @@ The user interface is bilingual: German on German-language systems, English ever
 | Show/hide window | ⌃⌥⌘D, Dock icon, moon menu |
 | Auto snap on/off | ⌃⌥⌘A, app menu “Window”, moon menu |
 | Mode, brightness, attach to a window | moon icon in the menu bar |
+| Filter sensitivity | − / + in the window's title bar (Smart Dark with “Keep Dark Areas”) |
 | Quit | ⌘Q (after clicking the frame/title bar), right-click the Dock icon |
 
 ## Requirements
@@ -62,11 +66,12 @@ as a new app. After a rebuild, remove DarkmodeWindow from the list in System Set
 ## Testing the filter
 
 ```bash
-./scripts/shader-preview.sh [screenshot.png] [output.png] [scale]
+./scripts/shader-preview.sh [screenshot.png] [output.png] [scale] [brightThreshold]
 ```
 
 Renders an image (e.g. a screenshot of a slide) through the filter: original on top, result
-below. Without input, a test slide is generated.
+below. Without input, a test slide is generated. `brightThreshold` (default 0.82) is the
+lightness from which areas are turned dark – the sensitivity levels range from 0.94 to 0.60.
 
 ## How it works
 

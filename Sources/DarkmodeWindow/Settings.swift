@@ -27,6 +27,21 @@ final class Settings {
         set { defaults.set(newValue, forKey: "adaptive") }
     }
 
+    /// Sensitivity level of Smart Dark (1 ... sensitivityThresholds.count): higher levels also
+    /// darken light gray and tinted backgrounds, lower levels only near-white ones.
+    static let sensitivityThresholds: [Float] = [0.94, 0.90, 0.86, 0.82, 0.77, 0.72, 0.66, 0.60]
+    static let defaultSensitivity = 4  // 0.82, the original threshold
+
+    var sensitivity: Int {
+        get {
+            let level = defaults.object(forKey: "sensitivity") as? Int ?? Self.defaultSensitivity
+            return min(max(level, 1), Self.sensitivityThresholds.count)
+        }
+        set { defaults.set(min(max(newValue, 1), Self.sensitivityThresholds.count), forKey: "sensitivity") }
+    }
+
+    var brightThreshold: Float { Self.sensitivityThresholds[sensitivity - 1] }
+
     /// Periodically jump to the largest bright area (e.g. a shared slide).
     var autoPosition: Bool {
         get { defaults.bool(forKey: "autoPosition") }

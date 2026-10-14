@@ -21,6 +21,8 @@ struct ShaderParams {
     var lodColor: Float = 4.0
     /// Distance in pixels (~5 pt) at which a dark pixel must see light on opposite sides to count as ink.
     var inkOffset: Float = 10
+    /// OKLab lightness above which a pixel counts as bright (paper); lower = more sensitive.
+    var brightThreshold: Float = 0.82
 }
 
 /// Compiled at runtime (no Xcode / offline metal compiler available).
@@ -42,6 +44,7 @@ struct Params {
     float lodErode;
     float lodColor;
     float inkOffset;
+    float brightThreshold;
 };
 
 vertex VOut vmain(uint vid [[vertex_id]]) {
@@ -95,10 +98,12 @@ static float3 gamutFit(float3 lab) {
 }
 
 // Pass 1: marks bright pixels (near-white / light pastel).
-fragment float fbright(VOut in [[stage_in]], texture2d<float> tex [[texture(0)]]) {
+fragment float fbright(VOut in [[stage_in]], texture2d<float> tex [[texture(0)]],
+                       constant Params& p [[buffer(0)]]) {
     constexpr sampler s(filter::nearest, address::clamp_to_edge);
     float L = linearToOklab(srgbToLinear(tex.sample(s, in.uv).rgb)).x;
-    return smoothstep(0.82, 0.92, L);
+    // The ramp must end below 1.0, otherwise pure white would not count as fully bright.
+    return smoothstep(p.brightThreshold, min(p.brightThreshold + 0.10, 0.99), L);
 }
 
 // Pass 2: "paper" = bright pixels whose ~2 pt surrounding is bright too. White text or icons on

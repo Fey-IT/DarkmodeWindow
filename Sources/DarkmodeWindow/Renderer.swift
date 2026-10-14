@@ -12,7 +12,10 @@ final class Renderer: NSObject, MTKViewDelegate {
     /// Part of the view the frame belongs to (normalized, top-left origin).
     private var coveredRect = CGRect(x: 0, y: 0, width: 1, height: 1)
 
-    var params = ShaderParams()
+    var params = ShaderParams() {
+        didSet { masksStale = masksStale || params.brightThreshold != oldValue.brightThreshold }
+    }
+    private var masksStale = false
 
     init?(view: MTKView) {
         guard let device = MTLCreateSystemDefaultDevice(),
@@ -60,7 +63,12 @@ final class Renderer: NSObject, MTKViewDelegate {
             if let cvTexture, let source = CVMetalTextureGetTexture(cvTexture) {
                 heldTexture = cvTexture
                 filter.ingest(source, commandBuffer: cmd, params: params)
+                masksStale = false
             }
+        }
+        if masksStale {
+            filter.rebuildMasks(commandBuffer: cmd, params: params)
+            masksStale = false
         }
 
         guard let pass = view.currentRenderPassDescriptor, let drawable = view.currentDrawable,

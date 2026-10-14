@@ -38,9 +38,14 @@ final class FrameView: NSView {
     let contentContainer = NSView()
     var onUserInteraction: (() -> Void)?
     var onClose: (() -> Void)?
+    /// −1 / +1 from the sensitivity buttons.
+    var onSensitivityStep: ((Int) -> Void)?
 
     private let titleLabel = NSTextField(labelWithString: "DarkmodeWindow")
     private let closeButton = NSButton()
+    private let minusButton = NSButton()
+    private let plusButton = NSButton()
+    private let sensitivityLabel = NSTextField(labelWithString: "")
 
     override init(frame: NSRect) {
         super.init(frame: frame)
@@ -66,6 +71,27 @@ final class FrameView: NSView {
         closeButton.toolTip = L10n.t("Ausblenden (⌃⌥⌘D)", "Hide (⌃⌥⌘D)")
         addSubview(closeButton)
 
+        func setUp(_ button: NSButton, symbol: String, action: Selector, tip: String) {
+            button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: tip)
+            button.isBordered = false
+            button.contentTintColor = NSColor(white: 0.6, alpha: 1)
+            button.target = self
+            button.action = action
+            button.toolTip = tip
+            addSubview(button)
+        }
+        setUp(minusButton, symbol: "minus", action: #selector(minusClicked),
+              tip: L10n.t("Weniger empfindlich: nur fast reines Weiß abdunkeln",
+                          "Less sensitive: darken only near-white areas"))
+        setUp(plusButton, symbol: "plus", action: #selector(plusClicked),
+              tip: L10n.t("Empfindlicher: auch hellgraue und getönte Flächen abdunkeln",
+                          "More sensitive: also darken light gray and tinted areas"))
+        sensitivityLabel.font = .monospacedDigitSystemFont(ofSize: 11, weight: .medium)
+        sensitivityLabel.textColor = NSColor(white: 0.6, alpha: 1)
+        sensitivityLabel.alignment = .center
+        sensitivityLabel.toolTip = L10n.t("Empfindlichkeit des Filters", "Filter sensitivity")
+        addSubview(sensitivityLabel)
+
         addTrackingArea(NSTrackingArea(rect: .zero,
                                        options: [.mouseMoved, .mouseEnteredAndExited, .activeAlways, .inVisibleRect],
                                        owner: self))
@@ -76,6 +102,23 @@ final class FrameView: NSView {
     var title: String {
         get { titleLabel.stringValue }
         set { titleLabel.stringValue = newValue }
+    }
+
+    var sensitivity = Settings.defaultSensitivity {
+        didSet { updateSensitivityControls() }
+    }
+
+    /// Only meaningful in Smart Dark with "Keep Dark Areas"; hidden otherwise.
+    var showsSensitivity = false {
+        didSet { updateSensitivityControls(); needsLayout = true }
+    }
+
+    private func updateSensitivityControls() {
+        let max = Settings.sensitivityThresholds.count
+        sensitivityLabel.stringValue = "◐ \(sensitivity)"
+        for view in [minusButton, plusButton, sensitivityLabel] { view.isHidden = !showsSensitivity }
+        minusButton.isEnabled = sensitivity > 1
+        plusButton.isEnabled = sensitivity < max
     }
 
     var contentRect: NSRect {
@@ -89,13 +132,19 @@ final class FrameView: NSView {
         contentContainer.frame = contentRect
         let barY = bounds.height - Self.titleHeight
         closeButton.frame = NSRect(x: bounds.width - 26, y: barY + 3, width: 18, height: 16)
-        titleLabel.frame = NSRect(x: 10, y: barY + 4, width: bounds.width - 44, height: 14)
+        plusButton.frame = NSRect(x: bounds.width - 52, y: barY + 3, width: 18, height: 16)
+        sensitivityLabel.frame = NSRect(x: bounds.width - 84, y: barY + 4, width: 32, height: 14)
+        minusButton.frame = NSRect(x: bounds.width - 102, y: barY + 3, width: 18, height: 16)
+        let titleEnd = showsSensitivity ? minusButton.frame.minX - 6 : closeButton.frame.minX - 8
+        titleLabel.frame = NSRect(x: 10, y: barY + 4, width: titleEnd - 10, height: 14)
     }
 
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
     override var mouseDownCanMoveWindow: Bool { false }
 
     @objc private func closeClicked() { onClose?() }
+    @objc private func minusClicked() { onSensitivityStep?(-1) }
+    @objc private func plusClicked() { onSensitivityStep?(+1) }
 
     private func edges(at p: NSPoint) -> Edges {
         let grip: CGFloat = 6, corner: CGFloat = 14

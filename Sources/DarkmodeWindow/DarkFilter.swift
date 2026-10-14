@@ -52,7 +52,7 @@ final class DarkFilter {
             brightTexture = device.makeTexture(descriptor: maskDesc)
             paperTexture = device.makeTexture(descriptor: maskDesc)
         }
-        guard let frame = frameTexture, let bright = brightTexture, let paper = paperTexture else { return }
+        guard let frame = frameTexture else { return }
 
         if let blit = cmd.makeBlitCommandEncoder() {
             blit.copy(from: source, sourceSlice: 0, sourceLevel: 0, sourceOrigin: MTLOrigin(),
@@ -61,6 +61,13 @@ final class DarkFilter {
             blit.generateMipmaps(for: frame)
             blit.endEncoding()
         }
+        rebuildMasks(commandBuffer: cmd, params: params)
+    }
+
+    /// Recomputes the masks from the stored frame, e.g. after the bright threshold changed
+    /// (ScreenCaptureKit delivers no new frame while the screen content is static).
+    func rebuildMasks(commandBuffer cmd: MTLCommandBuffer, params: ShaderParams) {
+        guard let frame = frameTexture, let bright = brightTexture, let paper = paperTexture else { return }
         maskPass(cmd, pipeline: brightPipeline, input: frame, output: bright, params: params)
         maskPass(cmd, pipeline: paperPipeline, input: bright, output: paper, params: params)
     }

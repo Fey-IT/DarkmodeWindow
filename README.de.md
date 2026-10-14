@@ -19,6 +19,9 @@ ein typischer Anwendungsfall.
   (#DEDEDE). Farben behalten ihren Farbton (Rot bleibt rot, Blau bleibt blau).
 - **Dunkle Bereiche beibehalten:** Was schon dunkel ist (dunkle Programmoberflächen, Videos,
   Fotos), wird nicht umgekehrt; Schrift bleibt scharf.
+- **Empfindlichkeit (− ◐ +):** Knöpfe in der Titelleiste legen fest, ab welcher Helligkeit eine
+  Fläche dunkel wird. **+** dunkelt auch hellgraue, beige oder getönte Hintergründe ab, **−** nur
+  fast reines Weiß (8 Stufen, Standard 4).
 - **Abdunkeln:** Alternative ohne Umwandlung, nur Helligkeit reduzieren.
 - **Automatisch auf hellen Bereich ausrichten:** Sucht alle 2 Sekunden die größte helle Fläche
   auf dem Bildschirm (z. B. ein weißes Dokument oder eine geteilte Präsentation) und legt das
@@ -38,6 +41,7 @@ Die Oberfläche ist zweisprachig: Deutsch auf deutschsprachigen Systemen, sonst 
 | Fenster ein-/ausblenden | ⌃⌥⌘D, Dock-Symbol, Mond-Menü |
 | Auto-Position an/aus | ⌃⌥⌘A, App-Menü „Fenster“, Mond-Menü |
 | Modus, Helligkeit, Andocken | Mond-Symbol in der Menüleiste |
+| Empfindlichkeit des Filters | − / + in der Titelleiste des Fensters (Smart Dark mit „Dunkle Bereiche beibehalten“) |
 | Beenden | ⌘Q (nach Klick auf Rahmen/Titelleiste), Rechtsklick aufs Dock-Symbol |
 
 ## Voraussetzungen
@@ -65,11 +69,12 @@ Signier-Zertifikat entfällt das: `SIGN_ID="Name des Zertifikats" ./scripts/buil
 ## Filter testen
 
 ```bash
-./scripts/shader-preview.sh [screenshot.png] [ausgabe.png] [scale]
+./scripts/shader-preview.sh [screenshot.png] [ausgabe.png] [scale] [brightThreshold]
 ```
 
 Rendert ein Bild (z. B. Screenshot einer Folie) durch den Filter: oben Original, unten Ergebnis.
-Ohne Eingabe wird eine Testfolie erzeugt.
+Ohne Eingabe wird eine Testfolie erzeugt. `brightThreshold` (Standard 0,82) ist die Helligkeit,
+ab der Flächen dunkel werden – die Empfindlichkeitsstufen reichen von 0,94 bis 0,60.
 
 ## Technik
 

@@ -2,12 +2,13 @@ import Metal
 import AppKit
 import CoreText
 
-// Usage: shader-preview [input.png] [output.png] [scale]
+// Usage: shader-preview [input.png] [output.png] [scale] [brightThreshold]
 // Without input a synthetic slide is rendered. Output shows original (top) and converted (bottom).
 let args = CommandLine.arguments
 let inputImage: CGImage? = args.count > 1 ? NSImage(contentsOfFile: args[1])?.cgImage(forProposedRect: nil, context: nil, hints: nil) : nil
 let outputPath = args.count > 2 ? args[2] : "preview.png"
 let scale: Float = args.count > 3 ? Float(args[3]) ?? 2 : (inputImage == nil ? 1 : 2)
+let threshold: Float? = args.count > 4 ? Float(args[4]) : nil
 let W = inputImage?.width ?? 1200, H = inputImage?.height ?? 700
 let cs = CGColorSpace(name: CGColorSpace.sRGB)!
 let ctx = CGContext(data: nil, width: W, height: H, bitsPerComponent: 8, bytesPerRow: W*4, space: cs,
@@ -55,6 +56,7 @@ od.usage = [.renderTarget]; od.storageMode = .managed
 let out = dev.makeTexture(descriptor: od)!
 let cb = dev.makeCommandQueue()!.makeCommandBuffer()!
 var p = ShaderParams(); p.lodSmall = log2(16 * scale); p.lodLarge = log2(24 * scale); p.lodErode = log2(2 * scale); p.lodColor = log2(8 * scale); p.inkOffset = 5 * scale
+if let threshold { p.brightThreshold = threshold }
 filter.ingest(tex, commandBuffer: cb, params: p)
 let rp = MTLRenderPassDescriptor(); rp.colorAttachments[0].texture = out; rp.colorAttachments[0].loadAction = .clear; rp.colorAttachments[0].storeAction = .store
 let en = cb.makeRenderCommandEncoder(descriptor: rp)!

@@ -28,7 +28,12 @@ changes or on errors).
    - Text becomes light gray (~#DEDEDE) instead of pure white (less glare and halation).
    - Colors are slightly desaturated and gamut-fitted so they stay readable on dark backgrounds.
    - **Adaptive** (menu "Keep Dark Areas", on by default):
-     1. "Bright" mask (OKLab L > ~0.85). 2. "Paper" mask = bright *and* its ~2 pt surrounding
+     1. "Bright" mask (OKLab L > `brightThreshold`, ramp of 0.10, capped at 0.99). The threshold
+        is the **sensitivity**: − / + buttons in the title bar (`FrameView`), 8 levels in
+        `Settings.sensitivityThresholds` (0.94 … 0.60, default level 4 = 0.82, the original value),
+        persisted; hidden in Dim mode and without "Keep Dark Areas". A change re-runs only the mask
+        passes on the stored frame (`DarkFilter.rebuildMasks`), since static content delivers no
+        new frames. 2. "Paper" mask = bright *and* its ~2 pt surrounding
         bright (erosion via mipmap – thin white text does not count as paper).
      3. Inversion is decided **per region (~24 pt mip level), never per pixel**:
         `t = max(smoothstep(0.02, 0.12, paperFraction_24pt) * gate, paperSelf)`.
@@ -42,7 +47,7 @@ changes or on errors).
    - Known trade-offs: small colored elements on slides (buttons, bars) are converted as well
      (darker); photo edges partially; a 1-px line at hard edges between slide and dark UI; the
      occasional speck in bold headlines.
-   - Always check tuning with `./scripts/shader-preview.sh [screenshot.png] [out.png] [scale]`
+   - Always check tuning with `./scripts/shader-preview.sh [screenshot.png] [out.png] [scale] [threshold]`
      (original on top, result below; without input a test slide is generated).
 
 ## Features
@@ -68,8 +73,8 @@ changes or on errors).
 - **Controls:** thin dark frame with title bar for moving/resizing; the inner area is
   click-through (clicks go to Teams/Meet underneath). Global shortcut ⌃⌥⌘D shows/hides the window.
 - **Dock app** (previously menu-bar only): quit via ⌘Q/Dock, clicking the Dock icon brings the
-  window back. The moon icon in the menu bar holds mode, brightness and attach options. The ✕ in
-  the window only hides it.
+  window back. The moon icon in the menu bar holds mode, brightness and attach options. In the
+  title bar, − ◐ + set the sensitivity and the ✕ only hides the window.
 - **Photos:** no image detection; the adaptive mode keeps regions without light "paper" (dark UI,
   video tiles, photo interiors) unchanged. Real photo detection only if it proves necessary.
 - **Language:** UI is bilingual via `L10n.t(german, english)` (`Localization.swift`): German on
