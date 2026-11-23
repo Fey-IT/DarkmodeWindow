@@ -1,6 +1,0 @@
-{
-  "name": "DarkmodeWindow",
-  "description": "A macOS app that turns anything bright on your screen dark – in any app",
-  "icon": "~/Applications/DarkmodeWindow.app",
-  "run": "APP=\"$HOME/Applications/DarkmodeWindow.app\"; if [ -d \"$APP\" ]; then open \"$APP\"; else osascript -e 'on run argv' -e 'tell application \"Terminal\" to activate' -e 'tell application \"Terminal\" to do script (item 1 of argv)' -e 'end run' -- \"cd '$PWD' && ./scripts/build-app.sh && open \\\"$APP\\\"\"; fi"
-}
